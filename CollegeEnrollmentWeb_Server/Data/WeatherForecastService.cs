@@ -1,4 +1,4 @@
-namespace CollegeEnrollmentWeb_Server.Data
+    namespace CollegeEnrollmentWeb_Server.Data
 {
     public class WeatherForecastService
     {

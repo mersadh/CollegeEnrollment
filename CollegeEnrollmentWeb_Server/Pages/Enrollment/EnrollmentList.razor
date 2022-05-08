@@ -1,0 +1,71 @@
+﻿@page "/enrollmentList"
+@inject IEnrollmentRepository _enrollmentRepository
+@inject NavigationManager _navigationManager
+
+<div>
+    <h4 class="card-title text-info">Pregled prijava za upis</h4>
+    @if (EnrollmentHeaders.Any())
+    {
+        <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true" 
+        Data="EnrollmentHeaders" TItem="EnrollmentHeaderDTO" LogicalFilterOperator="LogicalFilterOperator.Or">
+        <Columns>
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Property="Id" Filterable="false" Title="ID" Frozen="true" />
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Property="Ime" Title="Ime" Frozen="true"  />
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Property="Prezime" Title="Prezime"   />
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Property="Jmbg" Title="Jmbg"   />
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Property="NazivSrednjeSkole" Title="NazivSrednjeSkole"   />
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Property="BrojDiplome" Title="BrojDiplome"   />
+     
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Property="EnrollmentDate" Title="Datum prijave" FormatString="{0:d}" />
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Property="Status" Title="Status" />
+            <RadzenDataGridColumn TItem="EnrollmentHeaderDTO" Title="Details" >
+                <Template Context="data">
+                    <RadzenButton Click="(args=> EnrollmentDetails(data.Id))" Text="Details" ButtonStyle="ButtonStyle.Success"></RadzenButton>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+    }
+     else
+        {
+            if (IsLoading)
+            {
+                //loading gif
+                <div class="text-center">
+                <img src="/images/loading.gif">
+                    </div>
+            }
+        }
+
+</div>
+
+@code {
+    private IEnumerable<EnrollmentHeaderDTO> EnrollmentHeaders { get; set; } = new List<EnrollmentHeaderDTO>();
+    private bool IsLoading { get; set; } = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            await LoadEnrollments();
+
+        }
+    }
+
+    private async Task LoadEnrollments()
+    {
+        IsLoading = true;
+        StateHasChanged();
+        var Enrollments = await _enrollmentRepository.GetAll();
+        EnrollmentHeaders = Enrollments.Select(u => u.EnrollmentHeader);
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    private void EnrollmentDetails(int id)
+    {
+        _navigationManager.NavigateTo("/enrollment/details/" + id);
+    }
+
+}

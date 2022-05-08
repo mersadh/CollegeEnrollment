@@ -1,0 +1,208 @@
+﻿@page "/enrollment/details/{Id:int}"
+@inject IEnrollmentRepository _enrollmentRepository
+@inject IJSRuntime _jsRuntime
+@using CollegeEnrollment_Common
+
+
+@if(IsLoading){
+	<div class="text-center">
+                <img src="/images/loading.gif">
+	</div>
+}
+else
+{
+
+    	<div class="container">
+    <div class="card">
+        <div class="card-header bg-dark text-light ml-0">
+            <div class="container row">
+                <div class="col-12 d-none d-md-block col-md-6 pb-1">
+                    <i class="fas fa-shopping-cart"></i> &nbsp; Detalji prijave
+                </div>
+                <div class="col-12 col-md-4 offset-md-2 text-right">
+                    <a href="/enrollmentList" class="btn btn-outline-info form-control btn-sm">Povratak na prijave</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container rounded p-2">
+                <div class="row">
+                    <div class="col-12 col-lg-6 pb-4">
+                        <EditForm Model="Enrollment" OnValidSubmit="UpdateEnrollment">
+                            <DataAnnotationsValidator/>
+                            <div class="row">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-primary">Detalji o studentu:</span>
+                                </h4>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Name</div>
+                                <div class="col-9">
+                                    <InputText @bind-Value="Enrollment.EnrollmentHeader.Ime" class="form-control" />
+                                    <ValidationMessage For="()=>Enrollment.EnrollmentHeader.Prezime"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Phone</div>
+                                <div class="col-9">
+                                    <InputText @bind-Value="Enrollment.EnrollmentHeader.Prezime" class="form-control" />
+									<ValidationMessage For="()=>Enrollment.EnrollmentHeader.Prezime"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Address</div>
+                                <div class="col-9">
+                                    <InputDate @bind-Value="Enrollment.EnrollmentHeader.DatumRodjenja" class="form-control" />
+									<ValidationMessage For="()=>Enrollment.EnrollmentHeader.DatumRodjenja"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">City</div>
+                                <div class="col-9">
+                                    <InputText @bind-Value="Enrollment.EnrollmentHeader.Jmbg" class="form-control" />
+									<ValidationMessage For="()=>Enrollment.EnrollmentHeader.Jmbg"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">State</div>
+                                <div class="col-9">
+                                    <InputText @bind-Value="Enrollment.EnrollmentHeader.NazivSrednjeSkole" class="form-control" />
+									<ValidationMessage For="()=>Enrollment.EnrollmentHeader.NazivSrednjeSkole"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Zip Code</div>
+                                <div class="col-9">
+                                    <InputText @bind-Value="Enrollment.EnrollmentHeader.BrojDiplome" class="form-control" />
+									<ValidationMessage For="()=>Enrollment.EnrollmentHeader.BrojDiplome"></ValidationMessage>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Email</div>
+                                <div class="col-9">
+                                    <input type="text" readonly value="@Enrollment.EnrollmentHeader.Email"  class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Datum prijave</div>
+                                <div class="col-9">
+                                    <input type="text" readonly value="@Enrollment.EnrollmentHeader.EnrollmentDate.ToShortDateString()"  class="form-control" />
+                                </div>
+                            </div>
+
+
+                            @if (Enrollment.EnrollmentHeader.Status != SD.Status_Confirmed && Enrollment.EnrollmentHeader.Status != SD.Status_Pending)
+                            {
+                                <div class="row my-1">
+                                    <div class="col-3">Shipping Date</div>
+                                    <div class="col-9">
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                </div>
+                            }
+                            <div class="row my-1">
+                                <div class="col-3">User ID</div>
+                                <div class="col-9">
+                                    <input type="text" readonly value="@Enrollment.EnrollmentHeader.userId"  class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Status prijave</div>
+                                <div class="col-9">
+                                    <input value="@Enrollment.EnrollmentHeader.Status" type="text" readonly class="form-control" />
+                                </div>
+                            </div>
+                                @if (Enrollment.EnrollmentHeader.Status == SD.Status_Pending)
+                                {
+                                    <input type="submit" class="btn btn-warning form-control my-1" value="Ažuriraj prijavu" />
+                                }
+                            </EditForm>
+                    </div>
+                    <div class="col-12 col-lg-5 offset-lg-1">
+                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-primary">Sažetak prijave studija</span>
+                        </h4>
+                        <ul class="list-group mb-3">
+                            @foreach(var detail in Enrollment.EnrollmentDetails)
+                            {
+                            <li class="list-group-item d-flex justify-content-between p-2">
+                                <div class="row container">
+                                    <div class="col-8">
+                                        <h6 class="my-0 text-primary">@detail.MajorName</h6>
+                                    </div>
+                                </div>
+                            </li>
+                            }
+                            <li class="list-group-item bg-info">
+                                <div class="row container">
+                                    <div class="col-6">
+                                        <h5 class="text-white">TOTAL </h5>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <h5 class="text-white">@Enrollment.EnrollmentHeader.NumberOfEnrollments.ToString()</h5>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+
+
+                            @if (Enrollment.EnrollmentHeader.Status == SD.Status_Confirmed ||
+                   Enrollment.EnrollmentHeader.Status==SD.Status_Pending)
+                            {
+                                <button @onclick="CancelEnrollment" class="btn btn-danger form-control my-1">Odbij prijavu</button>
+                                }
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+}
+
+
+@code {
+
+        [Parameter]
+    public int Id { get; set; } = 0;
+    public bool IsLoading { get; set; } = true;
+    public EnrollmentDTO Enrollment { get; set; } = new();
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) { 
+
+            await LoadEnrollment();
+        }
+    }
+
+    private async Task LoadEnrollment()
+    {
+        IsLoading = true;
+        StateHasChanged();
+        Enrollment = await _enrollmentRepository.Get(Id);
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task UpdateEnrollment()
+    {
+        var EnrollmentHeaderDTO = await _enrollmentRepository.UpdateHeader(Enrollment.EnrollmentHeader);
+        Enrollment.EnrollmentHeader=EnrollmentHeaderDTO;
+        _jsRuntime.ToastrSuccess("Prijava na fakultet je uspješna.");
+    }
+
+    private async Task CancelEnrollment()
+    {
+        Enrollment.EnrollmentHeader = await _enrollmentRepository.CancelEnrollment(Enrollment.EnrollmentHeader.Id);
+        if (Enrollment.EnrollmentHeader.Status==SD.Status_Cancelled)
+        {
+            _jsRuntime.ToastrSuccess("Prijava je uspješno odbijena.");
+        }
+
+        
+    }
+
+}

@@ -1,0 +1,122 @@
+﻿@page "/major"
+@using CollegeEnrollment_Common
+
+@inject IMajorRepository _majorRepository
+@inject IJSRuntime _jsRuntime
+@inject IFileUpload _fileUpload
+@attribute [Authorize(Roles = SD.Role_Admin)]
+
+<_DeleteConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></_DeleteConfirmation>
+
+<div class="row mt-4">
+    <div class="col6">
+        <h4 class="card-title text-primary"> Smjer Studiranja</h4>
+    </div>
+    <div class="col-4 offset-2">
+        <a href="major/create" class="btn btn-primary form-control">Dodaj novi smjer studiranja</a>
+    </div>
+    <div class="col-12">
+        @if (Majors.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Način studiranja</th>
+                        <th>Najpopularniji studij</th>
+                        <th>School favorit</th>
+                        <th>Vrsta studija</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var maj in Majors)
+                    {
+                        <tr>
+                            <td>
+                                @maj.Name
+                            </td>
+                            <th>
+                                <input type="checkbox" disabled checked="@maj.StudentFavorites">
+                            </th>
+                            <th>
+                                <input type="checkbox" disabled checked="@maj.SchoolFavorites">
+                            </th>
+                            <th>
+                                @maj.Category.Name
+                            </th>
+                            <td>
+                                <NavLink href="@($"major/edit/{maj.Id}")" class="btn btn-primary">Ažuriraj</NavLink>
+                                <button class="btn btn-danger" @onclick="()=>HandleDelete(maj.Id)">Obriši</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        }
+        else
+        {
+            if (IsLoading)
+            {
+                //loading gif
+                <div class="text-center">
+                    <img src="/images/loading.gif">
+                </div>
+            }
+            else
+            {
+                // nema rekorda
+                <p>No records found.</p>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private IEnumerable<MajorDTO> Majors { get; set; } = new List<MajorDTO>();
+    public bool IsLoading { get; set; }
+    private int DeleteMajorId { get; set; } = 0;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadMajors();
+        }
+
+
+    }
+    private async Task LoadMajors()
+    {
+        IsLoading = true;
+        StateHasChanged();
+        Majors = await _majorRepository.GetAll();
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    private void HandleDelete(int id)
+    {
+        DeleteMajorId = id;
+        _jsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+    }
+
+    public async Task ConfirmDelete_Click(bool isConfirmed)
+    {
+        IsLoading = true;
+        if (isConfirmed && DeleteMajorId != 0)
+        {
+            //  delete
+            MajorDTO major = await _majorRepository.Get(DeleteMajorId);
+            if(!major.ImageUrl.Contains("default.png"))
+            {
+                _fileUpload.DeleteFile(major.ImageUrl);
+            }
+            await _majorRepository.Delete(DeleteMajorId);
+            await _jsRuntime.ToastrSuccess("Studij izbrisan uspješno");
+            await LoadMajors();
+            await _jsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+        }
+        IsLoading = false;
+    }
+
+}

@@ -1,0 +1,25 @@
+﻿<div>
+    <h4 class="text-primary pt-3">Another Child Component</h4>
+    <input id="name" @attributes="InputAttributes"/>
+</div>
+
+@code {
+    //[Parameter]
+    //public string Placeholder { get; set; } = "Initial text";
+    //[Parameter]
+    //public string Required { get; set; } = "required";
+    //[Parameter]
+    //public string MaxLength { get; set; } = "10";
+
+    //[Parameter(CaptureUnmatchedValue = true)] - kada se ovo postavi nije potrebno setovati parametre required, placeholder, maxLength
+
+
+    [Parameter]
+    public Dictionary<string, object> InputAttributes { get; set; } = new Dictionary<string, object>()
+    {
+        {"required", "required"},
+        {"placeholder", "Enter your name"},
+        {"maxLength", "10"}
+    };
+
+}

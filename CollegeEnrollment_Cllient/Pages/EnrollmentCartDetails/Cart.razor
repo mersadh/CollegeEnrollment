@@ -1,0 +1,147 @@
+﻿@page "/cart"
+@inject ILocalStorageService _localStorage
+@inject ISyncLocalStorageService _localStorageSync
+@inject IMajorService _majorService
+@inject IEnrollmentCartService _cartService
+
+
+@if (IsProcessing)
+{
+    <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
+        <img src="images/ajax-loader.gif" />
+	</div>
+}
+else 
+{
+	@if (!EnrollmentCart.Any())
+	{
+		<div>
+			Molimo odaberite studijski smjer.
+		</div>
+	}
+	else
+	{
+		<div class="container mt-4">
+			<div class="card">
+				<div class="card-header bg-dark text-light ml-0 ">
+					<div class="row">
+						<div class="col-6  pt-2">
+							Odabrani studiji
+						</div>
+						<div class="col-6 col-md-3 offset-md-3 text-end">
+							<a href="/" class="btn btn-outline-info form-control">Povratank na izbor studija</a>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+
+					@foreach(var item in EnrollmentCart){
+
+					<div class="row">
+						<div class="col-3 col-md-1 text-center py-2">
+							<img src="@item.Major.ImageUrl" class="rounded" width="100%" />
+						</div>
+						<div class="col-9 text-sm-center text-md-start col-md-4 pt-lg-1 ">
+							<h4><strong>@item.Major.Name</strong></h4>
+
+							<div class="badge bg-primary text-center" style="font-size:12px;">
+								Vrsta studija: @item.Major.Category.Name
+							</div>
+							<div class="badge bg-info text-center" style="font-size:12px;">
+								Trajanje studija: @item.Major.Duration
+							</div>
+						</div>
+						<div class="col-12 text-sm-center col-md-7 text-md-start row  pt-lg-3 mt-3">
+@*
+							<div class="col-6 col-sm-4 col-lg-6">
+								<button type="submit" class="btn btn-primary">
+									<i class="bi bi-plus-square"></i>
+								</button>
+								<button  type="submit" class="btn btn-warning">
+									<i class="bi bi-dash-square"></i>
+								</button>
+							</div>*@
+							<div class="col-2 col-sm-4 col-lg-2 text-right">
+								<button @onclick="()=>Decrement(item.MajorId, 1)" type="submit" class="btn btn-outline-danger">
+									<i class="bi bi-trash-fill"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+					}
+
+					<hr />
+
+					<div class="row">
+						<div class="col-12 col-md-5">
+						</div>
+						<div class="col-12 col-md-6 offset-md-1 col-lg-4 offset-lg-3 pr-4">
+							<ul class="list-group">
+								<li class="list-group-item d-flex justify-content-between bg-light">
+									<span class="text-info"> Broj odabranih studija</span>
+									<strong class="text-info">@NumberOfEnrollments.ToString()</strong>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="card-footer">
+					<div class="col-12  col-md-3 offset-md-9">
+						<a href="/summary" class="btn btn-secondary form-control">Nastavi prijavu - Dodaj lične podatke</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+	public bool IsProcessing { get; set; } = false;
+	private List<EnrollmentCart> EnrollmentCart = new List<EnrollmentCart>();
+	private IEnumerable<MajorDTO> Majors { get; set; }
+	private int NumberOfEnrollments { get; set; } = 0;
+
+	protected override async Task OnInitializedAsync()
+	{
+		IsProcessing=true;
+		EnrollmentCart = await _localStorage.GetItemAsync<List<EnrollmentCart>>(SD.EnrollmentCart);
+		Majors = await _majorService.GetAll();
+		await LoadCart();
+		IsProcessing=false;
+
+	}
+
+	private async Task LoadCart()
+	{
+		NumberOfEnrollments = 0;
+		EnrollmentCart = await _localStorage.GetItemAsync<List<EnrollmentCart>>(SD.EnrollmentCart);
+		foreach(var cart in EnrollmentCart)
+		{
+			cart.Major = Majors.FirstOrDefault(u => u.Id == cart.MajorId);
+			
+		}
+		NumberOfEnrollments += GetCartCount();
+	}
+
+	private async Task Decrement (int MajorId, int Count)
+	{
+		IsProcessing = true;
+		await _cartService.DecrementEnrollmentCart(new()
+			{
+				Count = Count,
+				MajorId = MajorId
+			});
+
+		await LoadCart();
+		IsProcessing = false;
+
+	}
+
+	private int GetCartCount()
+	{
+		var cart = _localStorageSync.GetItem<List<EnrollmentCart>>(SD.EnrollmentCart);
+		return cart == null ? 0 : cart.Count;
+	}
+}

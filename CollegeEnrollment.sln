@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollegeEnrollmentWeb_Server", "CollegeEnrollmentWeb_Server\CollegeEnrollmentWeb_Server.csproj", "{2396E4D6-04E8-4A70-8A50-47B9A98998E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollegeEnrollmentWeb_Server", "CollegeEnrollmentWeb_Server\CollegeEnrollmentWeb_Server.csproj", "{2396E4D6-04E8-4A70-8A50-47B9A98998E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollegeEnrollment_Cllient", "CollegeEnrollment_Cllient\CollegeEnrollment_Cllient.csproj", "{B1405896-D0AA-47CC-8D8B-379D96045BC1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollegeEnrollment_Models", "CollegeEnrollment_Models\CollegeEnrollment_Models.csproj", "{487A4839-6069-4DE0-88ED-99FD48391C21}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollegeEnrollment_Business", "CollegeEnrollment_Business\CollegeEnrollment_Business.csproj", "{4FCC7EB0-9D5B-4CAD-BAA0-E4FDC8B98295}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollegeEnrollment_Common", "CollegeEnrollment_Common\CollegeEnrollment_Common.csproj", "{61611863-A9DC-4535-B039-A6070135B24E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollegeEnrollment_DataAccess", "CollegeEnrollment_DataAccess\CollegeEnrollment_DataAccess.csproj", "{511D378D-9953-48C8-A145-643C5C912E0E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollegeEnrollment_API", "CollegeEnrollment_API\CollegeEnrollment_API.csproj", "{48DBBFBD-E5DA-4C6D-9374-70F254F2F11D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +27,30 @@ Global
 		{2396E4D6-04E8-4A70-8A50-47B9A98998E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2396E4D6-04E8-4A70-8A50-47B9A98998E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2396E4D6-04E8-4A70-8A50-47B9A98998E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1405896-D0AA-47CC-8D8B-379D96045BC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1405896-D0AA-47CC-8D8B-379D96045BC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1405896-D0AA-47CC-8D8B-379D96045BC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1405896-D0AA-47CC-8D8B-379D96045BC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{487A4839-6069-4DE0-88ED-99FD48391C21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{487A4839-6069-4DE0-88ED-99FD48391C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{487A4839-6069-4DE0-88ED-99FD48391C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{487A4839-6069-4DE0-88ED-99FD48391C21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FCC7EB0-9D5B-4CAD-BAA0-E4FDC8B98295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FCC7EB0-9D5B-4CAD-BAA0-E4FDC8B98295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FCC7EB0-9D5B-4CAD-BAA0-E4FDC8B98295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FCC7EB0-9D5B-4CAD-BAA0-E4FDC8B98295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61611863-A9DC-4535-B039-A6070135B24E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61611863-A9DC-4535-B039-A6070135B24E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61611863-A9DC-4535-B039-A6070135B24E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61611863-A9DC-4535-B039-A6070135B24E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{511D378D-9953-48C8-A145-643C5C912E0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511D378D-9953-48C8-A145-643C5C912E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511D378D-9953-48C8-A145-643C5C912E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511D378D-9953-48C8-A145-643C5C912E0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48DBBFBD-E5DA-4C6D-9374-70F254F2F11D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48DBBFBD-E5DA-4C6D-9374-70F254F2F11D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48DBBFBD-E5DA-4C6D-9374-70F254F2F11D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48DBBFBD-E5DA-4C6D-9374-70F254F2F11D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
